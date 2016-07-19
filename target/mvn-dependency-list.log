@@ -1,0 +1,6 @@
+
+The following files have been resolved:
+   org.apache.tomcat:tomcat-servlet-api:jar:8.0.15:compile
+   com.squareup.okio:okio:jar:1.9.0:compile
+   org.json:json:jar:20160212:compile
+
