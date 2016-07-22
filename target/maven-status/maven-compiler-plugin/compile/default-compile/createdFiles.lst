@@ -1,1 +1,5 @@
+com\dinkq\utils\BotUserState.class
+com\dinkq\utils\BotUtils.class
+launch\Main.class
 com\dinkq\view\CoffeeWeb.class
+com\dinkq\utils\GupshupObject.class

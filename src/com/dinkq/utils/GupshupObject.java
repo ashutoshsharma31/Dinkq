@@ -8,6 +8,7 @@ public class GupshupObject
 	private String channelId;
 	private String channelType;
 	private String contextObj;
+	
 
 	public String getMessageType()
 	{

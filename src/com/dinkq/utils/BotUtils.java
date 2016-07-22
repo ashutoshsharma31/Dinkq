@@ -8,8 +8,11 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.dinkq.entity.Order;
 
 public class BotUtils {
 
@@ -18,6 +21,7 @@ public class BotUtils {
 	public static GupshupObject parseMessage(HttpServletRequest request) throws JSONException {
 		String messageObj = request.getParameter("messageobj");
 		String senderObj = request.getParameter("senderobj");
+
 		JSONObject messageObjeObject = new JSONObject(messageObj);
 		JSONObject senderObjeObject = new JSONObject(senderObj);
 		String messageType = messageObjeObject.getString("type");
@@ -55,30 +59,77 @@ public class BotUtils {
 	public static List getStateList() {
 		List<String> states = new ArrayList<String>();
 
-		states.add("senthelp");
-		states.add("optionsselected");
-		states.add("quesmode");
+		states.add("level1");
+		states.add("level2");
+		states.add("level3");
 		return states;
 
 	}
 
 	public static JSONObject quickReplyTest(String message, String[] options, String msgid) {
-		/***
-		 * { "type": "quick_reply", "content": { "type": "text", "text":
-		 * "What's your favourite color?" }, "msgid": "qr_212", "options": [
-		 * "Red", "Green", "Yellow", "Blue" ] }
-		 * 
-		 * 
-		 */
-		//String[] str = { "Red", "Green", "Yellow", "Blue" };
+		// String[] str = { "Red", "Green", "Yellow", "Blue" };
 		List arrOptions = Arrays.asList(options);
 		JSONObject my = new JSONObject();
-		my.put("type", "quick_reply")
-				.put("content", new JSONObject().put("type", "text").put("text", message))
+		my.put("type", "quick_reply").put("content", new JSONObject().put("type", "text").put("text", message))
 				.put("options", arrOptions).put("msgid", msgid);
 
 		return my;
 
+	}
+	
+	public static JSONObject coralView(List<Order> order){
+		
+		/*
+		 * {
+		  "type": "catalogue",
+		  "msgid": "cat_212",
+		  "items": [{
+		    "title": "White T Shirt",
+		    "subtitle": "Soft cotton t-shirt \nXs, S, M, L \n$10",
+		    "imgurl": "http://petersapparel.parseapp.com/img/item100-thumb.png",
+		    "options": [
+		        {
+		        "type": "url",
+		        "title": "View Details",
+		        "url": "http://petersapparel.parseapp.com/img/item100-thumb.png"
+		      }, 
+		            {
+		        "type": "text",
+		        "title": "Buy"
+		      }
+		
+		    ]
+		  }, 
+		     {
+		    "title": "Grey T Shirt",
+		    "subtitle": "Soft cotton t-shirt \nXs, S, M, L \n$12",
+		    "imgurl": "http://petersapparel.parseapp.com/img/item101-thumb.png",
+		    "options": [
+		        {
+		      "type": "url",
+		      "title": "View Details",
+		      "url": "http://petersapparel.parseapp.com/img/item101-thumb.png"
+		    }, 
+		        {
+		      "type": "text",
+		      "title": "Buy"
+		    }]
+		  }]
+		}
+		 */
+		
+		//List arrOptions = Arrays.asList(options);
+		JSONObject my = new JSONObject();
+		my.put("type", "catalogue").put("msgid", "coralview");
+		//.put("content", new JSONObject().put("type", "text").put("text", message))
+		//		.put("options", arrOptions).put("msgid", msgid);
+		
+		JSONArray arr = new JSONArray();
+		
+
+		
+		
+		return null;		
 	}
 
 }
