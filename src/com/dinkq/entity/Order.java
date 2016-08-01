@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 public class Order {
 	private int quantity;
+	private float price;
+	private String size;
 	private Item item;
-
+	private float totalPrice;
 	public Order() {
 		super();
 
@@ -17,44 +19,57 @@ public class Order {
 		this.item = item;
 	}
 
-	/**
-	 * @return the quantity
-	 */
+	public Order(int quantity, int price, String size, Item item) {
+		super();
+		this.quantity = quantity;
+		this.price = price;
+		this.size = size;
+		this.item = item;
+	}
+
 	public int getQuantity() {
 		return quantity;
 	}
 
-	/**
-	 * @param quantity
-	 *            the quantity to set
-	 */
 	public void setQuantity(int quantity) {
 		this.quantity = quantity;
 	}
 
-	/**
-	 * @return the item
-	 */
+	public float getPrice() {
+		return price;
+	}
+
+	public void setPrice(float price) {
+		this.price = price;
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
 	public Item getItem() {
 		return item;
 	}
 
-	/**
-	 * @param item
-	 *            the item to set
-	 */
 	public void setItem(Item item) {
 		this.item = item;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+
 	@Override
 	public String toString() {
-		return "Order [quantity=" + quantity + ", item=" + item + "]";
+		return "Order [quantity=" + quantity + ", price=" + price + ", size=" + size + ", item=" + item + "]";
 	}
 
 }

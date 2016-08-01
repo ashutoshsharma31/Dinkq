@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.dinkq.utils.BotUtils;
 import com.dinkq.utils.GupshupObject;
@@ -45,7 +47,8 @@ public class CoffeeWeb extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
+		String serverPath = request.getRequestURL().substring(0,
+				request.getRequestURL().length() - request.getServletPath().length());
 		try {
 			GupshupObject go = BotUtils.parseMessage(request);
 
@@ -75,8 +78,133 @@ public class CoffeeWeb extends HttpServlet {
 				String[] options = MenuItems.getMenuItems("First");
 				sessionData.setOrderStatus(StatusMessages.ORDER_START);
 				sessionData.setItemStatus(StatusMessages.ITEM_START);
-
 				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+
+			} else if (usermessage.trim().contains("Update")) {
+				String itemName = usermessage.substring(7, usermessage.length() - 2);
+				String[] options = Quantity.getQuantity();
+				String message = "Please specify new quantity of " + itemName;
+				sessionData.setItemStatus(StatusMessages.ITEM_NEW_QUANTITY);
+				Item item = new Item(itemName, 5);
+				sessionData.setItem(item);
+				System.out.println(item + "  added as current item !");
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+			} else if (usermessage.trim().contains("Delete")) {
+				String itemName = usermessage.substring(7);
+				sessionData.removeOrderFromList(itemName);
+				List<Order> orderList = sessionData.getOrderList();
+				String message = "";
+				String[] options = MenuItems.getMenuItems("Review Order");
+				JSONObject coralObject = BotUtils.coralView(orderList, serverPath);
+				System.out.println("Coral Object" + coralObject);
+				writer.println(coralObject);
+
+			} else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_SINGLE_SIZE)
+					&& (usermessage.equals("Small") || usermessage.equals("Medium") || usermessage.equals("Large"))) {
+				Item item = sessionData.getItem();
+				Order order = new Order();
+				order.setItem(item);
+				order.setQuantity(1);
+				order.setSize(usermessage);
+				order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), usermessage));
+				sessionData.addOrderToList(order);
+				String message = "Item added ..  Whats else ?";
+				String[] options = MenuItems.getMenuItems("Review Order");
+
+				sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
+				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+			}
+			else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_QUANTITY) && !MenuItems.isSizeable(sessionData.getItem().getItemName())) {
+				Item item = sessionData.getItem();
+				Order order = new Order();
+				order.setItem(item);
+				sessionData.setRemQuantity(sessionData.getRemQuantity()-Integer.parseInt(usermessage.trim()));
+				order.setQuantity(Integer.parseInt(usermessage.trim()));					
+				order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), usermessage));
+				sessionData.addOrderToList(order);
+				String message = "Item added ..  Whats else ?";
+				String[] options = MenuItems.getMenuItems("Review Order");
+
+				sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
+				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+			}
+			else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_QUANTITY)) {
+				sessionData.setRemQuantity(Integer.parseInt(usermessage.trim()));
+				if (Integer.parseInt(usermessage.toLowerCase().trim()) == 1) {
+					String message = "What size do you want that? ";
+					String[] options = MenuItems.getMenuItems("Size");
+					sessionData.setItemStatus(StatusMessages.ITEM_SINGLE_SIZE);
+					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+					writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				} else {
+					String message = "How many small quantity ? ";
+					String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
+					sessionData.setItemStatus(StatusMessages.ITEM_SIZE_SMALL);
+					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+					writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				}
+
+			} else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_SIZE_SMALL)) {
+				if (Integer.parseInt(usermessage.toLowerCase().trim()) != 0) {
+					Item item = sessionData.getItem();
+					Order order = new Order();
+					order.setItem(item);
+					sessionData.setRemQuantity(sessionData.getRemQuantity()-Integer.parseInt(usermessage.trim()));
+					order.setQuantity(Integer.parseInt(usermessage.trim()));					
+					order.setSize("Small");
+					order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), "Small"));
+					sessionData.addOrderToList(order);
+				}
+
+				String message = "How many medium quantity ? ";
+				String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
+				sessionData.setItemStatus(StatusMessages.ITEM_SIZE_MEDIUM);
+				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+
+			} else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_SIZE_MEDIUM)) {
+				if (Integer.parseInt(usermessage.toLowerCase().trim()) != 0) {
+					Item item = sessionData.getItem();
+					Order order = new Order();
+					order.setItem(item);
+					sessionData.setRemQuantity(sessionData.getRemQuantity()-Integer.parseInt(usermessage.trim()));
+					order.setQuantity(Integer.parseInt(usermessage.trim()));					
+					order.setSize("Medium");
+					order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), "Medium"));
+					sessionData.addOrderToList(order);
+				}
+
+				String message = "How many large quantity ? ";
+				String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
+				sessionData.setItemStatus(StatusMessages.ITEM_SIZE_LARGE);
+				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+			} else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_SIZE_LARGE)) {
+				if (Integer.parseInt(usermessage.toLowerCase().trim()) != 0) {
+					Item item = sessionData.getItem();
+					Order order = new Order();
+					order.setItem(item);
+					sessionData.setRemQuantity(sessionData.getRemQuantity()-Integer.parseInt(usermessage.trim()));
+					order.setQuantity(Integer.parseInt(usermessage.trim()));
+					order.setSize("Large");
+					order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), "Large"));
+					sessionData.addOrderToList(order);
+				}
+
+				String message = "Item added ..  Whats else ?";
+				String[] options = MenuItems.getMenuItems("Review Order");
+
+				sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
+				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+			} else if (usermessage.trim().contains("Confirm Order")) {
+
+				submitOrderToMarchant();
+				sessionData.clearOrderList();
+				writer.println(
+						"Order is submitted to marchant ! Sit back and relax we will let you know once your order is ready. :)");
 
 			} else if (usermessage.trim().contains("Review Order")) {
 				List<Order> orderList = sessionData.getOrderList();
@@ -86,8 +214,9 @@ public class CoffeeWeb extends HttpServlet {
 					message += order;
 				}
 				String[] options = MenuItems.getMenuItems("Review Order");
-
-				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				JSONObject coralObject = BotUtils.coralView(orderList, serverPath);
+				System.out.println("Coral Object" + coralObject);
+				writer.println(coralObject);
 
 			}
 			// When user selects from quick replies.
@@ -112,25 +241,41 @@ public class CoffeeWeb extends HttpServlet {
 			} else if (MenuItems.checkMenuItemToOrder(usermessage)) {
 				String[] options = Quantity.getQuantity();
 				String message = "Please specify quantity of " + usermessage;
+				
 				sessionData.setItemStatus(StatusMessages.ITEM_QUANTITY);
 				sessionData.setItem(new Item(usermessage, 10));
 				writer.println(BotUtils.quickReplyTest(message, options, msgid));
 			} else if (isInteger(usermessage.trim())
+					&& sessionData.getItemStatus().equals(StatusMessages.ITEM_NEW_QUANTITY)) {
+				Item item = sessionData.getItem();
+				System.out.println(item + "  fetched as current item !");
+				Order order = sessionData.getOrder(item);
+				System.out.println("ORDER" + order);
+				order.setQuantity(Integer.parseInt(usermessage.trim()));
+				String message = "Quantity of " + item.getItemName() + " changed to " + order.getQuantity() + "\n";
+				String[] options = MenuItems.getMenuItems("Review Order");
+				sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
+				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+			}
+
+			else if (isInteger(usermessage.trim())
 					&& sessionData.getItemStatus().equals(StatusMessages.ITEM_QUANTITY)) {
 				Item item = sessionData.getItem();
 				Order order = new Order();
 				order.setItem(item);
 				order.setQuantity(Integer.parseInt(usermessage.trim()));
 				sessionData.addOrderToList(order);
-				String message = "Item added " + item.getName() + " with quantity " + order.getQuantity()
+				String message = "Item added " + item.getItemName() + " with quantity " + order.getQuantity()
 						+ "/n Whats else ?";
 				String[] options = MenuItems.getMenuItems("Review Order");
 				sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
 				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
 				writer.println(BotUtils.quickReplyTest(message, options, msgid));
-			} else {
-				writer.println(sessionData.getItemStatus() + " " + sessionData.getOrderStatus() + " "
-						+ "No action setup for this options. Try saying hi");
+			}
+
+			else {
+				writer.println(sessionData+ "No action setup for this options. Try saying hi");
 			}
 			writer.flush();
 			writer.close();
@@ -139,6 +284,12 @@ public class CoffeeWeb extends HttpServlet {
 			e.printStackTrace();
 			response.getWriter().append(e.getMessage());
 		}
+	}
+
+	private void submitOrderToMarchant() {
+		// TODO Auto-generated method stub
+		System.out.println("ORDER SUBMITTED TO MARCHANT SUCCESSFULLY");
+
 	}
 
 	/**

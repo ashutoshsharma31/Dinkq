@@ -23,4 +23,12 @@ public class Quantity {
 	public static boolean checkMenuItemToOrder(String item) {
 		return quantity.contains(item);
 	}
+	
+	public static String[] getQuantityFromZero(int max){
+		String array[] = new String[max+1];
+		for (int i = 0; i <= max; i++) {
+			array[i]=Integer.toString(i);
+		}
+		return array;
+	}
 }

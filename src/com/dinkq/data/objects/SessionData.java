@@ -15,6 +15,8 @@ public class SessionData {
 	String itemStatus;
 	GupshupObject gupshupObject;
 	Item item;
+	int itemQuantity;
+	int remQuantity;
 
 	public SessionData() {
 		super();
@@ -125,15 +127,53 @@ public class SessionData {
 		orderList.add(order);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	public Order getOrder(Item item) {
+		Order result = null;
+		for (Order order : orderList) {
+			if (order.getItem().getItemName().equals(item.getItemName())) {
+				result = order;
+				break;
+			}
+		}
+		return result;
+	}
+
+	public void removeOrderFromList(String itemName) {
+		int index = 0;
+		for (Order order : orderList) {
+			if (order.getItem().getItemName().equals(itemName)) {
+				orderList.remove(index);
+			}
+			index++;
+		}
+
+	}
+
+	public void clearOrderList() {
+		orderList.clear();
+	}
+
+	public int getItemQuantity() {
+		return itemQuantity;
+	}
+
+	public void setItemQuantity(int itemQuantity) {
+		this.itemQuantity = itemQuantity;
+	}
+
+	public int getRemQuantity() {
+		return remQuantity;
+	}
+
+	public void setRemQuantity(int remQuantity) {
+		this.remQuantity = remQuantity;
+	}
+
 	@Override
 	public String toString() {
 		return "SessionData [person=" + person + ", orderList=" + orderList + ", orderStatus=" + orderStatus
-				+ ", itemStatus=" + itemStatus + ", gupshupObject=" + gupshupObject + ", item=" + item + "]";
+				+ ", itemStatus=" + itemStatus + ", gupshupObject=" + gupshupObject + ", item=" + item
+				+ ", itemQuantity=" + itemQuantity + "]";
 	}
 
 }

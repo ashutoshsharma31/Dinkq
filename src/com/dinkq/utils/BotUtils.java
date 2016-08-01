@@ -76,60 +76,55 @@ public class BotUtils {
 		return my;
 
 	}
-	
-	public static JSONObject coralView(List<Order> order){
-		
+
+	public static JSONObject coralView(List<Order> orderList, String serverPath) {
+
 		/*
-		 * {
-		  "type": "catalogue",
-		  "msgid": "cat_212",
-		  "items": [{
-		    "title": "White T Shirt",
-		    "subtitle": "Soft cotton t-shirt \nXs, S, M, L \n$10",
-		    "imgurl": "http://petersapparel.parseapp.com/img/item100-thumb.png",
-		    "options": [
-		        {
-		        "type": "url",
-		        "title": "View Details",
-		        "url": "http://petersapparel.parseapp.com/img/item100-thumb.png"
-		      }, 
-		            {
-		        "type": "text",
-		        "title": "Buy"
-		      }
-		
-		    ]
-		  }, 
-		     {
-		    "title": "Grey T Shirt",
-		    "subtitle": "Soft cotton t-shirt \nXs, S, M, L \n$12",
-		    "imgurl": "http://petersapparel.parseapp.com/img/item101-thumb.png",
-		    "options": [
-		        {
-		      "type": "url",
-		      "title": "View Details",
-		      "url": "http://petersapparel.parseapp.com/img/item101-thumb.png"
-		    }, 
-		        {
-		      "type": "text",
-		      "title": "Buy"
-		    }]
-		  }]
-		}
+		 * { "type": "catalogue", "msgid": "cat_212", "items": [{ "title":
+		 * "White T Shirt", "subtitle":
+		 * "Soft cotton t-shirt \nXs, S, M, L \n$10", "imgurl":
+		 * "http://petersapparel.parseapp.com/img/item100-thumb.png", "options":
+		 * [ { "type": "url", "title": "View Details", "url":
+		 * "http://petersapparel.parseapp.com/img/item100-thumb.png" }, {
+		 * "type": "text", "title": "Buy" }
+		 * 
+		 * ] }, { "title": "Grey T Shirt", "subtitle":
+		 * "Soft cotton t-shirt \nXs, S, M, L \n$12", "imgurl":
+		 * "http://petersapparel.parseapp.com/img/item101-thumb.png", "options":
+		 * [ { "type": "url", "title": "View Details", "url":
+		 * "http://petersapparel.parseapp.com/img/item101-thumb.png" }, {
+		 * "type": "text", "title": "Buy" }] }] }
 		 */
-		
-		//List arrOptions = Arrays.asList(options);
+
+		// List arrOptions = Arrays.asList(options);
 		JSONObject my = new JSONObject();
 		my.put("type", "catalogue").put("msgid", "coralview");
-		//.put("content", new JSONObject().put("type", "text").put("text", message))
-		//		.put("options", arrOptions).put("msgid", msgid);
-		
-		JSONArray arr = new JSONArray();
-		
+		// .put("content", new JSONObject().put("type", "text").put("text",
+		// message))
+		// .put("options", arrOptions).put("msgid", msgid);
+		ArrayList<JSONObject> itemObject = new ArrayList<JSONObject>();
+		for (Order order : orderList) {
+			ArrayList<JSONObject> options = new ArrayList<JSONObject>();
+			options.add(new JSONObject().put("type", "text").put("title", "Update " + order.getItem().getItemName()));
+			options.add(new JSONObject().put("type", "text").put("title", "Delete " + order.getItem().getItemName()));
+			options.add(new JSONObject().put("type", "text").put("title", "Confirm Order"));
+			JSONObject catItem = null;
+			if(order.getSize()!=null){
+				catItem = new JSONObject().put("title", order.getItem().getItemName())
+						.put("subtitle", "Size: "+order.getSize()+ " Quantity:" +order.getQuantity()+ " Price:" +order.getPrice()).put("options", options);					
+			}
+			else{
+				catItem = new JSONObject().put("title", order.getItem().getItemName())
+						.put("subtitle", " Quantity:" +order.getQuantity()+ " Price:" +order.getPrice()).put("options", options);				
+			}
+			catItem.put("imgurl", serverPath + "/latte.png");
+			itemObject.add(catItem);
 
-		
-		
-		return null;		
+		}
+
+		my.put("items", itemObject);
+
+		return my;
 	}
 
 }

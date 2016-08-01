@@ -2,18 +2,17 @@ package com.dinkq.entity;
 
 import java.math.BigDecimal;
 
-/**
- * This class characterizes an individual menu item We import big decimal to
- * handle the problem of arbitrarily long decimal places We write a toString()
- * method to easily return important information about the item
- * 
- * @author adityanaganath
- *
- */
 public class Item {
 
 	private String itemName;
 	private int itemPrice;
+	private boolean sizeable;
+	private String size;
+
+	public Item() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Item(String itemName, int itemPrice) {
 
@@ -21,27 +20,57 @@ public class Item {
 		this.itemPrice = itemPrice;
 	}
 
-	public String getName() {
+	public Item(String itemName, int itemPrice, String size) {
+		super();
+		this.itemName = itemName;
+		this.itemPrice = itemPrice;
+		this.size = size;
+	}
+	
+	public Item(String itemName, int itemPrice, boolean sizeable, String size) {
+		super();
+		this.itemName = itemName;
+		this.itemPrice = itemPrice;
+		this.sizeable = sizeable;
+		this.size = size;
+	}
+
+	public String getItemName() {
 		return itemName;
 	}
 
-	public int getCost() {
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public int getItemPrice() {
 		return itemPrice;
 	}
 
-	public String itemToString() {
-		String info = itemName + "\n" + itemPrice;
-		return info;
+	public void setItemPrice(int itemPrice) {
+		this.itemPrice = itemPrice;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	public boolean isSizeable() {
+		return sizeable;
+	}
+
+	public void setSizeable(boolean sizeable) {
+		this.sizeable = sizeable;
+	}
+
+	public String getSize() {
+		return size;
+	}
+
+	public void setSize(String size) {
+		this.size = size;
+	}
+
 	@Override
 	public String toString() {
-		return "Item [itemName=" + itemName + ", itemPrice=" + itemPrice + "]";
+		return "Item [itemName=" + itemName + ", itemPrice=" + itemPrice + ", sizeable=" + sizeable + ", size=" + size
+				+ "]";
 	}
 
 }
