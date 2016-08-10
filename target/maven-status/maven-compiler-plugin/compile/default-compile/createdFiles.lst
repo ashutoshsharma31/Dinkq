@@ -1,5 +1,15 @@
+com\dinkq\data\conf\MenuItems.class
 com\dinkq\utils\BotUserState.class
 com\dinkq\utils\BotUtils.class
+com\dinkq\data\objects\SessionData.class
+com\dinkq\data\objects\Storage.class
+com\dinkq\entity\Order.class
+com\dinkq\entity\Person.class
+com\dinkq\data\conf\Quantity.class
+com\dinkq\entity\Item.class
 launch\Main.class
+com\dinkq\data\conf\ItemPrice.class
+com\dinkq\data\conf\StatusMessages.class
 com\dinkq\view\CoffeeWeb.class
+com\dinkq\file\FileOperators.class
 com\dinkq\utils\GupshupObject.class

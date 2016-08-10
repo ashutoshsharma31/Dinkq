@@ -2,6 +2,7 @@ package com.dinkq.view;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -91,7 +92,8 @@ public class CoffeeWeb extends HttpServlet {
 				writer.println(BotUtils.quickReplyTest(message, options, msgid));
 			} else if (usermessage.trim().contains("Delete")) {
 				String itemName = usermessage.substring(7);
-				sessionData.removeOrderFromList(itemName);
+				int index = Integer.parseInt(usermessage.substring(usermessage.length()-1))-1;
+				sessionData.removeOrderFromListUsingIndex(index);
 				List<Order> orderList = sessionData.getOrderList();
 				String message = "";
 				String[] options = MenuItems.getMenuItems("Review Order");
@@ -141,6 +143,8 @@ public class CoffeeWeb extends HttpServlet {
 				} else {
 					String message = "How many small quantity ? ";
 					String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
+					System.out.println(" LOGS :: options "+Arrays.toString(options));
+
 					sessionData.setItemStatus(StatusMessages.ITEM_SIZE_SMALL);
 					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
 					writer.println(BotUtils.quickReplyTest(message, options, msgid));
@@ -157,12 +161,20 @@ public class CoffeeWeb extends HttpServlet {
 					order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), "Small"));
 					sessionData.addOrderToList(order);
 				}
-
-				String message = "How many medium quantity ? ";
-				String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
-				sessionData.setItemStatus(StatusMessages.ITEM_SIZE_MEDIUM);
-				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
-				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				if(sessionData.getRemQuantity()!=0){
+					String message = "How many medium quantity ? ";
+					String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
+					sessionData.setItemStatus(StatusMessages.ITEM_SIZE_MEDIUM);
+					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+					writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				}
+				else{
+					String message = "Item added ..  Whats else ?";
+					String[] options = MenuItems.getMenuItems("Review Order");
+					sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
+					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+					writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				}
 
 			} else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_SIZE_MEDIUM)) {
 				if (Integer.parseInt(usermessage.toLowerCase().trim()) != 0) {
@@ -175,12 +187,20 @@ public class CoffeeWeb extends HttpServlet {
 					order.setPrice(MenuItems.getPriceOfItem(item.getItemName(), "Medium"));
 					sessionData.addOrderToList(order);
 				}
-
-				String message = "How many large quantity ? ";
-				String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
-				sessionData.setItemStatus(StatusMessages.ITEM_SIZE_LARGE);
-				sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
-				writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				if(sessionData.getRemQuantity()!=0){
+					String message = "How many large quantity ? ";
+					String[] options = Quantity.getQuantityFromZero(sessionData.getRemQuantity());
+					sessionData.setItemStatus(StatusMessages.ITEM_SIZE_LARGE);
+					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+					writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				}
+				else{
+					String message = "Item added ..  Whats else ?";
+					String[] options = MenuItems.getMenuItems("Review Order");
+					sessionData.setItemStatus(StatusMessages.ITEM_COMPLETE);
+					sessionData.setOrderStatus(StatusMessages.ORDER_IN_PROGRESS);
+					writer.println(BotUtils.quickReplyTest(message, options, msgid));
+				}
 			} else if (sessionData.getItemStatus().equals(StatusMessages.ITEM_SIZE_LARGE)) {
 				if (Integer.parseInt(usermessage.toLowerCase().trim()) != 0) {
 					Item item = sessionData.getItem();

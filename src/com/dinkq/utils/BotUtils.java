@@ -117,7 +117,7 @@ public class BotUtils {
 				catItem = new JSONObject().put("title", order.getItem().getItemName())
 						.put("subtitle", " Quantity:" +order.getQuantity()+ " Price:" +order.getPrice()).put("options", options);				
 			}
-			catItem.put("imgurl", serverPath + "/latte.png");
+			catItem.put("imgurl", serverPath + "http://dummyimage.com/200x300&text="+order.getItem().getItemName());
 			itemObject.add(catItem);
 
 		}

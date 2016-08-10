@@ -10,7 +10,7 @@ import java.util.Set;
 public class Quantity {
 
 	private static List quantity = new ArrayList();
-	private static String arr[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" };
+	private static String arr[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 	static {
 
 		quantity = Arrays.asList(arr);

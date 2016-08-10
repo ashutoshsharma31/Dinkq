@@ -143,11 +143,16 @@ public class SessionData {
 		for (Order order : orderList) {
 			if (order.getItem().getItemName().equals(itemName)) {
 				orderList.remove(index);
+				break;
 			}
 			index++;
 		}
-
 	}
+	
+	public void removeOrderFromListUsingIndex(int index) {
+		orderList.remove(index);
+	}
+	
 
 	public void clearOrderList() {
 		orderList.clear();
